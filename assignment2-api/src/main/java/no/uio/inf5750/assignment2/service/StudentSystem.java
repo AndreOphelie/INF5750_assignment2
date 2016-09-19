@@ -133,4 +133,12 @@ public interface StudentSystem {
      */
     void delStudent(int studentId);
     
+    /**
+     * 
+     * @param studentId
+     * @param latitude
+     * @param longitude
+     */
+    void setStudentLocation(int studentId, String latitude, String longitude);
+    
 }

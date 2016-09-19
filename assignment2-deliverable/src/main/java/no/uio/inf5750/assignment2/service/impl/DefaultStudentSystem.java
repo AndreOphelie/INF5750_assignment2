@@ -33,8 +33,12 @@ public class DefaultStudentSystem implements StudentSystem {
      */
 	@Override
     public int addCourse(String courseCode, String name){
-		Course course = new Course(courseCode,name);
-		return courseDao.saveCourse(course);
+		if(name != null && !name.equals("") && courseCode != null && !courseCode.equals("")){
+			Course course = new Course(courseCode,name);
+			return courseDao.saveCourse(course);
+		}
+		return -1;
+		
 	}
 
     /**
@@ -46,9 +50,12 @@ public class DefaultStudentSystem implements StudentSystem {
      */
 	@Override
     public void updateCourse(int courseId, String courseCode, String name){
-		Course course = new Course (courseCode,name);
-		course.setId(courseId);
-		courseDao.saveCourse(course);
+		if (name != null && !name.equals("") && courseCode != null && !courseCode.equals("")) {
+			Course course = courseDao.getCourse(courseId);
+			course.setCourseCode(courseCode);
+			course.setName(name);
+			courseDao.saveCourse(course);
+		}
 	}
 
     /**
@@ -165,8 +172,12 @@ public class DefaultStudentSystem implements StudentSystem {
      */
 	@Override
     public int addStudent(String name){
-		Student student = new Student(name);
-		return studentDao.saveStudent(student);
+		if (name != null && !name.equals("")){
+			Student student = new Student(name);
+			return studentDao.saveStudent(student);
+		}
+		return -1;
+		
 	}
 
     /**
@@ -177,9 +188,11 @@ public class DefaultStudentSystem implements StudentSystem {
      */
 	@Override
     public void updateStudent(int studentId, String name){
-		Student student = new Student(name);
-		student.setId(studentId);
-		studentDao.saveStudent(student);
+		if(name != null && !name.equals("")){
+			Student student = studentDao.getStudent(studentId);
+			student.setName(name);
+			studentDao.saveStudent(student);
+		}
 	}
 
     /**
@@ -233,19 +246,14 @@ public class DefaultStudentSystem implements StudentSystem {
 		
 		studentDao.delStudent(student);
 		
-		if (getStudent(student.getId()) != null) System.out.println("STILL HERE");
-		
-		Collection<Student> students = getAllStudents();
-		Object[] obje = students.toArray();
-		System.out.println("AFTER DELETE");
-	    for(Object o : obje){
-	    	Student s = new Student();
-	    	s = (Student) o;
-	    	System.out.println(s.getName());
-	    }
-	    
-	    if (getStudent(student.getId()) != null) System.out.println("STILL HERE");
-		
+	}
+
+	@Override
+	public void setStudentLocation(int studentId, String latitude, String longitude) {
+		Student student = studentDao.getStudent(studentId);
+		student.setLatitude(latitude);
+		student.setLongitude(longitude);
+		studentDao.saveStudent(student);
 	}
 	
 }

@@ -1,7 +1,17 @@
 function getStudentData() {
 	// This must be implemented by you. The json variable should be fetched
-	// from the server, not initiated with a static value as below. 
+	// from the server, not initiated with a static value as below.
 	// You must first download the student json data from the server
+	$.ajax({
+		url: "http://localhost:8080/assignment2-gui/api/student",
+		type: "GET",
+		success: function(result){
+	       console.log(result);
+	    },
+	    error: function(er){
+	    	console.log(er);
+	    }
+	});
 	// then call populateStudentTable(json);
 	// and then populateStudentLocationForm(json);
 
@@ -11,7 +21,8 @@ function populateStudentTable(json) {
 	// for each student make a row in the student location table
 	// and show the name, all courses and location.
 	// if there is no location print "No location" in the <td> instead
-	// tip: see populateStudentLocationForm(json) og google how to insert html from js with jquery. 
+	// tip: see populateStudentLocationForm(json) og google how to insert html
+	// from js with jquery.
 	// Also search how to make rows and columns in a table with html
 
 	// the table can you see in index.jsp with id="studentTable"
@@ -41,9 +52,9 @@ $('#locationbtn').on('click', function(e) {
 function get_location() {
 }
 
-// Call this function when you've succesfully obtained the location. 
+// Call this function when you've succesfully obtained the location.
 function location_found(position) {
-	// Extract latitude and longitude and save on the server using an AJAX call. 
+	// Extract latitude and longitude and save on the server using an AJAX call.
 	// When you've updated the location, call populateStudentTable(json); again
 	// to put the new location next to the student on the page. .
 
