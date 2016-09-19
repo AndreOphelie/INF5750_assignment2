@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import no.uio.inf5750.assignment2.dao.CourseDAO;
 import no.uio.inf5750.assignment2.dao.StudentDAO;
@@ -13,6 +15,8 @@ import no.uio.inf5750.assignment2.model.Course;
 import no.uio.inf5750.assignment2.model.Student;
 import no.uio.inf5750.assignment2.service.StudentSystem;
 
+@Component
+@Transactional
 public class DefaultStudentSystem implements StudentSystem {
 	
 	@Autowired
@@ -99,7 +103,7 @@ public class DefaultStudentSystem implements StudentSystem {
 	@Override
     public void delCourse(int courseId){
 		//delete for the course for attendants
-		Course course = courseDao.getCourse(courseId);
+		Course course = getCourse(courseId);
 		Set<Student> attendants = course.getAttendants();
 		Object[] obj = attendants.toArray();
 	    for(Object o : obj){
@@ -228,6 +232,20 @@ public class DefaultStudentSystem implements StudentSystem {
 	    }
 		
 		studentDao.delStudent(student);
+		
+		if (getStudent(student.getId()) != null) System.out.println("STILL HERE");
+		
+		Collection<Student> students = getAllStudents();
+		Object[] obje = students.toArray();
+		System.out.println("AFTER DELETE");
+	    for(Object o : obje){
+	    	Student s = new Student();
+	    	s = (Student) o;
+	    	System.out.println(s.getName());
+	    }
+	    
+	    if (getStudent(student.getId()) != null) System.out.println("STILL HERE");
+		
 	}
 	
 }

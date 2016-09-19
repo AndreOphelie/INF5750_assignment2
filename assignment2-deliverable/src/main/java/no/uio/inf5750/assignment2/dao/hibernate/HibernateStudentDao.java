@@ -1,15 +1,22 @@
 package no.uio.inf5750.assignment2.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import no.uio.inf5750.assignment2.dao.StudentDAO;
 import no.uio.inf5750.assignment2.model.Student;
 
+@Transactional(propagation = Propagation.MANDATORY)
 public class HibernateStudentDao implements StudentDAO{
 	
 	static Logger logger = Logger.getLogger(HibernateCourseDao.class);
@@ -70,14 +77,14 @@ public class HibernateStudentDao implements StudentDAO{
      * @return all students.
      */
     @Override
-    public Collection<Student> getAllStudents(){
+    public Collection<Student> getAllStudents(){  	
     	//session
 		Session session = sessionFactory.getCurrentSession();
         
         // HQL query
         String qry = "from Student";      
         Query query = session.createQuery(qry);
-        
+
         //get the result 
         return query.list();
     }

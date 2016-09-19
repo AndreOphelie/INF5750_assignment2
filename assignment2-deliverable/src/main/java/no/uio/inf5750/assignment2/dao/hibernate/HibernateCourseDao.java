@@ -6,12 +6,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import no.uio.inf5750.assignment2.dao.CourseDAO;
 import no.uio.inf5750.assignment2.model.Course;
 
-@Transactional
+@Transactional(propagation = Propagation.MANDATORY)
 public class HibernateCourseDao implements CourseDAO {
 	
 	static Logger logger = Logger.getLogger(HibernateCourseDao.class);
