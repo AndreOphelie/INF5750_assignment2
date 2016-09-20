@@ -1,3 +1,5 @@
+var markers = [];
+
 function getStudentData() {
 	// This must be implemented by you. The json variable should be fetched
 	// from the server, not initiated with a static value as below.
@@ -27,13 +29,22 @@ function populateStudentTable(json) {
 	// tip: see populateStudentLocationForm(json) og google how to insert html
 	// from js with jquery.
 	// Also search how to make rows and columns in a table with html
+	
+	//delete previous data
+	$('.my_table').remove();
+	
+	//delete previous markers
+	for (var i = 0; i < markers.length; i++) {
+	    markers[i].setMap(null);
+	}
+	markers = [];
 
 	// the table can you see in index.jsp with id="studentTable"
 	var formString = '';
 	for (var s = 0; s < json.length; s++) {
 		var student = json[s];
 		student = explodeJSON(student);
-		formString += '<tr><td>' + student.name + '</td>';
+		formString += '<tr class="my_table"><td>' + student.name + '</td>';
 		
 		var stringCourse = '';
 		for (var c = 0; c < student.courses.length; c++){
@@ -43,13 +54,14 @@ function populateStudentTable(json) {
 		
 		if(student.latitude!=null && student.longitude != null){
 			formString += '<td>' + student.latitude + ',' + student.longitude + '</td></tr>';
+			
+			//map marker
+			add_marker(student.latitude, student.longitude, student.name);
 		}
-		else formString += '<td> No Location </td></tr>';
-		
+		else formString += '<td> No Location </td></tr>';	
 	}
 	
-	$('#studentTable').append(formString);
-			
+	$('#studentTable').append(formString);		
 }
 
 function populateStudentLocationForm(json) {
@@ -62,8 +74,7 @@ function populateStudentLocationForm(json) {
 	}
 	formString += '</select></td></tr>';
 	
-	$('#studentLocationTable').append(formString);
-	
+	$('#studentLocationTable').append(formString);	
 }
 
 $('#locationbtn').on('click', function(e) {
@@ -76,10 +87,9 @@ function get_location() {
 	navigator.geolocation.getCurrentPosition(
 			function(position) {
 				if(position.coords.latitude != null && position.coords.longitude != null){
-					console.log("toto");
 					location_found(position);
 				} else {
-					console.log("FAIL");
+					alert("browser doesn't handle geolocation");
 				}		
 			},
 			function(er){
@@ -130,4 +140,38 @@ function explodeJSON(object) {
 	}
 	console.log(object);
 	return object;
+}
+
+var map;
+function initialize_map() {
+       var mapOptions = {
+               zoom : 10,
+               mapTypeId : google.maps.MapTypeId.ROADMAP
+       };
+       map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+       // Try HTML5 geolocation
+       if (navigator.geolocation) {
+               navigator.geolocation.getCurrentPosition(function(position) {
+                       var pos = new google.maps.LatLng(position.coords.latitude,
+                                       position.coords.longitude);
+                       map.setCenter(pos);
+               }, function() {
+                       handleNoGeolocation(true);
+               });
+       } else {
+               // Browser doesn't support Geolocation
+               // Should really tell the user…
+    	   	   alert("Browser doesn't support geolocation");
+       }
+}
+
+function add_marker(latitude, longitude, name){
+	var myLatlng = new google.maps.LatLng(latitude, longitude);                        
+	var marker = new google.maps.Marker({
+	   position: myLatlng,
+	   map: map,
+	   title: name
+	});
+	
+	markers.push(marker);
 }

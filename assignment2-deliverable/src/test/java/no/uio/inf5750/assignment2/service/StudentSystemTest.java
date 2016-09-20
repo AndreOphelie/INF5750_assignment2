@@ -6,7 +6,9 @@ import static org.junit.Assert.assertNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import no.uio.inf5750.assignment2.model.Course;
 import no.uio.inf5750.assignment2.model.Student;
@@ -133,13 +136,40 @@ public class StudentSystemTest {
 	}
 	
 	@Test
+	@Transactional //(because of Lazy error)
 	public void addAttendantToCourseTest(){
+		int student_id = studentSystem.addStudent("nameStu");
+		int course_id = studentSystem.addCourse("courseStu", "courseNameStu");
+		studentSystem.addAttendantToCourse(course_id, student_id);
 		
+		Course my_course = studentSystem.getCourse(course_id);
+		Student my_student = studentSystem.getStudent(student_id);
+		
+		Set<Student> attendants = my_course.getAttendants();
+		Student student_c = (Student) attendants.toArray()[0];
+		assertEquals(my_student,student_c);
+		
+		Set<Course> courses = my_student.getCourses();
+		Course course_c = (Course) courses.toArray()[0];
+		assertEquals(my_course,course_c);
 	}
 	
 	@Test
+	@Transactional //(because of Lazy error)
 	public void removeAttendantFromCourse(){
+		int student_id = studentSystem.addStudent("nameStu");
+		int course_id = studentSystem.addCourse("courseStu", "courseNameStu");
+		studentSystem.addAttendantToCourse(course_id, student_id);
+		studentSystem.removeAttendantFromCourse(course_id, student_id);
 		
+		Course my_course = studentSystem.getCourse(course_id);
+		Student my_student = studentSystem.getStudent(student_id);
+		
+		Set<Student> attendants = my_course.getAttendants();
+		assertEquals(true,attendants.isEmpty());
+		
+		Set<Course> courses = my_student.getCourses();
+		assertEquals(true,courses.isEmpty());
 	}
 	
 	@Test
@@ -243,6 +273,4 @@ public class StudentSystemTest {
 			studentSystem.delStudent(s.getId());
 		}
 	}
-
-
 }

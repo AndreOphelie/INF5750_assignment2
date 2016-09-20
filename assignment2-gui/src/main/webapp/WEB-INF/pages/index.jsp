@@ -108,8 +108,21 @@ html,body {
 		getStudentData();
 	});
 	</script>
+	
+	<script src="https://maps.googleapis.com/maps/api/js">
+	</script>
+	<script>
+	$(document).ready(function(){
+		initialize_map();
+	});
+	</script>
 
 <div id="map-canvas" class="container map"></div>
+
+
+<br/> <br/>
+
+
 
 </body>
 </html>
