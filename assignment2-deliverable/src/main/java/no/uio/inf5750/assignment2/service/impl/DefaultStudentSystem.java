@@ -245,7 +245,6 @@ public class DefaultStudentSystem implements StudentSystem {
 	    }
 		
 		studentDao.delStudent(student);
-		
 	}
 
 	@Override
