@@ -84,15 +84,16 @@ $('#locationbtn').on('click', function(e) {
 
 // This function gets called when you press the Set Location button
 function get_location() {
+	//ask for the location
 	navigator.geolocation.getCurrentPosition(
-			function(position) {
+			function(position) { //succeed
 				if(position.coords.latitude != null && position.coords.longitude != null){
 					location_found(position);
 				} else {
 					alert("browser doesn't handle geolocation");
 				}		
 			},
-			function(er){
+			function(er){ // fail
 				console.log(er);
 			}
 	);
@@ -166,12 +167,14 @@ function initialize_map() {
 }
 
 function add_marker(latitude, longitude, name){
-	var myLatlng = new google.maps.LatLng(latitude, longitude);                        
+	//create a position
+	var myLatlng = new google.maps.LatLng(latitude, longitude); 
+	//create a marker and add it to the map
 	var marker = new google.maps.Marker({
 	   position: myLatlng,
 	   map: map,
 	   title: name
 	});
-	
+	//add the marker to the array
 	markers.push(marker);
 }

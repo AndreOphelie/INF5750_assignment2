@@ -1,8 +1,6 @@
 package no.uio.inf5750.assignment2.service.impl;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,12 +111,14 @@ public class DefaultStudentSystem implements StudentSystem {
 		Course course = getCourse(courseId);
 		Set<Student> attendants = course.getAttendants();
 		Object[] obj = attendants.toArray();
+		//for each attendant, delete the link attendant/course
 	    for(Object o : obj){
 	    	Student student = new Student();
 	    	student = (Student) o;
 	    	removeAttendantFromCourse(courseId, student.getId());
 	    }
-	       	
+	    
+	    //then delete the course
 		courseDao.delCourse(getCourse(courseId));
 	}
 
@@ -238,15 +238,21 @@ public class DefaultStudentSystem implements StudentSystem {
 		Student student = getStudent(studentId);
 		Set<Course> courses = student.getCourses();
 		Object[] obj = courses.toArray();
+		//for each course of the student, delete the link
 	    for(Object o : obj){
 	    	Course course = new Course();
 	    	course = (Course) o;
 	    	removeAttendantFromCourse(course.getId(), studentId);
 	    }
 		
+	    //then delete the student
 		studentDao.delStudent(student);
 	}
 
+	/**
+	 *  set the position of the student
+	 * 
+	 */
 	@Override
 	public void setStudentLocation(int studentId, String latitude, String longitude) {
 		Student student = studentDao.getStudent(studentId);
