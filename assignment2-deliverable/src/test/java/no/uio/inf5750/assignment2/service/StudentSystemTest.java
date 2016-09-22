@@ -176,7 +176,7 @@ public class StudentSystemTest {
 	@Test
 	@Transactional //(because of Lazy error)
 	public void removeAttendantFromCourse(){
-		// add a student, course and add attendnat to course
+		// add a student, course and add attendant to course
 		int student_id = studentSystem.addStudent("nameStu");
 		int course_id = studentSystem.addCourse("courseStu", "courseNameStu");
 		studentSystem.addAttendantToCourse(course_id, student_id);
